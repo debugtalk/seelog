@@ -129,7 +129,7 @@ var PageIndex = `
 <body>
 
 <header>
-    <h2 id="title">实时查看日志信息 &nbsp;<button id="status" style="background-color: darkorange">正在连接...</button><button id=""><a href="http://github.com/xmge/seelog" style="text-decoration:none;"  target="_blank">项目地址</a></button>
+    <h2 id="title">实时查看日志信息 &nbsp;<button id="status" style="background-color: darkorange">正在连接...</button><button id=""><a href="http://github.com/debugtalk/seelog" style="text-decoration:none;"  target="_blank">项目地址</a></button>
     </h2>
     <div class="tool">
 

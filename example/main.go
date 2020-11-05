@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/xmge/seelog"
+	"github.com/debugtalk/seelog"
 	"log"
 	"os"
 	"time"
