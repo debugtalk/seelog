@@ -18,10 +18,10 @@ import "github.com/debugtalk/seelog"
 
 seelog.See("错误日志", "err.log")   // 实时监听 err.log
 seelog.See("调试日志", "debug.log") // 实时监听 debug.log
-seelog.Serve(27129, "password")
+seelog.Serve(27129)
 ```
 
-在浏览器中访问 `http://host:port/{password}`
+在浏览器中访问 `http://host:port/wstailog`
 
 ### 项目展示
 

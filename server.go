@@ -11,7 +11,7 @@ import (
 )
 
 // start http server
-func server(port int, password string) {
+func server(port int) {
 
 	defer func() {
 		if err := recover(); err != nil {
@@ -23,7 +23,7 @@ func server(port int, password string) {
 	http.Handle("/ws", websocket.Handler(genConn))
 
 	// page
-	http.HandleFunc("/tailog", func(writer http.ResponseWriter, request *http.Request) {
+	http.HandleFunc("/wstailog", func(writer http.ResponseWriter, request *http.Request) {
 		showPage(writer, PageIndex, slogs)
 	})
 

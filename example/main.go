@@ -18,7 +18,7 @@ func main() {
 	// 测试
 	seelog.See("错误日志", ErrLog)
 	seelog.See("调试日志", DebugLog)
-	seelog.Serve(27129, "password")
+	seelog.Serve(27129)
 
 	// 模拟服务输出日志
 	go printLog("调试日志", DebugLog)
