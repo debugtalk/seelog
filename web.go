@@ -1,11 +1,11 @@
-package seelog
+package wstailog
 
 var webPageContent = `
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8"/>
-    <title>seelog</title>
+    <title>wstailog</title>
     <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
     <script>
 

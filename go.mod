@@ -1,4 +1,4 @@
-module github.com/debugtalk/seelog
+module github.com/debugtalk/wstailog
 
 go 1.14
 

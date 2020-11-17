@@ -1,4 +1,4 @@
-package seelog
+package wstailog
 
 import (
 	"fmt"

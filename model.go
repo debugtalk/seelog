@@ -1,4 +1,4 @@
-package seelog
+package wstailog
 
 type slog struct {
 	Name string `json:"name"`

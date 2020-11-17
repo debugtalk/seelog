@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/debugtalk/seelog"
+	"github.com/debugtalk/wstailog"
 	"log"
 	"os"
 	"time"
@@ -16,9 +16,9 @@ const (
 func main() {
 
 	// 测试
-	seelog.See("错误日志", ErrLog)
-	seelog.See("调试日志", DebugLog)
-	seelog.Serve(27129)
+	wstailog.See("错误日志", ErrLog)
+	wstailog.See("调试日志", DebugLog)
+	wstailog.Serve(27129)
 
 	// 模拟服务输出日志
 	go printLog("调试日志", DebugLog)
