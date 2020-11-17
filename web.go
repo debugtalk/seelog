@@ -1,6 +1,6 @@
 package seelog
 
-var PageIndex = `
+var webPageContent = `
 <!DOCTYPE html>
 <html>
 <head>

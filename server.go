@@ -24,7 +24,7 @@ func server(port int) {
 
 	// page
 	http.HandleFunc("/wstailog", func(writer http.ResponseWriter, request *http.Request) {
-		showPage(writer, PageIndex, slogs)
+		showPage(writer, webPageContent, slogs)
 	})
 
 	err := http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
