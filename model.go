@@ -5,7 +5,7 @@ type slog struct {
 	Path string `json:"path"`
 }
 
-type msg struct {
+type logLine struct {
 	LogName string `json:"logName"`
 	Data    string `json:"data"`
 }

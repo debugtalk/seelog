@@ -40,7 +40,7 @@ func monitorLogFile(sl slog) {
 	)
 
 	for line := range t.Lines {
-		manager.broadcast <- msg{sl.Name, line.Text}
+		manager.broadcast <- logLine{sl.Name, line.Text}
 	}
 }
 

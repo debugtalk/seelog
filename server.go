@@ -10,15 +10,15 @@ import (
 )
 
 // start http server
-func server(port int) {
+func startServer(port int) {
 	defer func() {
 		if err := recover(); err != nil {
-			log.Printf("http server panic error: %v", err)
+			log.Printf("http startServer panic error: %v", err)
 		}
 	}()
 
 	// socket
-	http.Handle("/ws", websocket.Handler(genConn))
+	http.Handle("/ws", websocket.Handler(createWSConnection))
 
 	// page
 	http.HandleFunc("/wstailog", func(writer http.ResponseWriter, request *http.Request) {
@@ -39,9 +39,9 @@ func renderWebPage(writer http.ResponseWriter, page string, data interface{}) {
 	t.Execute(writer, data)
 }
 
-// create client
-func genConn(ws *websocket.Conn) {
-	client := &client{time.Now().String(), ws, make(chan msg, 1), slogs[0].Name}
+// create wsClient
+func createWSConnection(conn *websocket.Conn) {
+	client := &wsClient{time.Now().String(), conn, make(chan logLine, 1), slogs[0].Name}
 	manager.register <- client
 	go client.read()
 	client.write()

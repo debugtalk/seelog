@@ -5,6 +5,16 @@ import (
 )
 
 var slogs []slog
+var manager wsClientManager
+
+func init() {
+	manager = wsClientManager{
+		broadcast:  make(chan logLine),
+		register:   make(chan *wsClient),
+		unregister: make(chan *wsClient),
+		clients:    make(map[*wsClient]bool),
+	}
+}
 
 // register monitor log file
 func See(name, path string) {
@@ -42,6 +52,6 @@ func Serve(port int) {
 	// start to monitor all registered log files
 	go monitorAllLogs(slogs)
 
-	// start log server
-	go server(port)
+	// start log startServer
+	go startServer(port)
 }

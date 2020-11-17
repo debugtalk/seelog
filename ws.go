@@ -7,30 +7,14 @@ import (
 	"log"
 )
 
-//  websocket客户端
-type client struct {
-	id     string
-	socket *websocket.Conn
-	send   chan msg
-	see    string
+type wsClientManager struct {
+	clients    map[*wsClient]bool
+	broadcast  chan logLine
+	register   chan *wsClient
+	unregister chan *wsClient
 }
 
-// 客户端管理
-type clientManager struct {
-	clients    map[*client]bool
-	broadcast  chan msg
-	register   chan *client
-	unregister chan *client
-}
-
-var manager = clientManager{
-	broadcast:  make(chan msg),
-	register:   make(chan *client),
-	unregister: make(chan *client),
-	clients:    make(map[*client]bool),
-}
-
-func (manager *clientManager) start() {
+func (manager *wsClientManager) start() {
 	defer func() {
 		if err := recover(); err != nil {
 			log.Printf("start manager panic error: %v", err)
@@ -47,21 +31,30 @@ func (manager *clientManager) start() {
 				conn.socket.Close()
 				delete(manager.clients, conn)
 			}
-		case msg := <-manager.broadcast:
+		case line := <-manager.broadcast:
 			for conn := range manager.clients {
-				if conn.see == msg.LogName {
-					conn.send <- msg
+				if conn.logName == line.LogName {
+					conn.send <- line
 				}
 			}
 		}
 	}
 }
 
-func (c *client) write() {
+type wsClient struct {
+	id      string
+	socket  *websocket.Conn
+	send    chan logLine
+	logName string
+}
 
+func (c *wsClient) write() {
 	for msg := range c.send {
-		msgByte, _ := json.Marshal(msg) // 忽略错误
-		_, err := c.socket.Write(msgByte)
+		msgByte, err := json.Marshal(msg)
+		if err != nil {
+			continue
+		}
+		_, err = c.socket.Write(msgByte)
 		if err != nil {
 			manager.unregister <- c
 			log.Printf("write error: %v", err)
@@ -70,7 +63,7 @@ func (c *client) write() {
 	}
 }
 
-func (c *client) read() {
+func (c *wsClient) read() {
 	for {
 		var reply string
 		if err := websocket.Message.Receive(c.socket, &reply); err != nil {
@@ -80,15 +73,12 @@ func (c *client) read() {
 			}
 			break
 		}
-		type recv struct {
-			LogName string `json:"logName"`
-		}
-		var rcv = &recv{}
-		if err := json.Unmarshal([]byte(reply), &rcv); err != nil {
+		var line = &logLine{}
+		if err := json.Unmarshal([]byte(reply), &line); err != nil {
 			manager.unregister <- c
 			log.Printf("read error: %v", err)
 			break
 		}
-		c.see = rcv.LogName
+		c.logName = line.LogName
 	}
 }
