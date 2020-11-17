@@ -1,7 +1,6 @@
 package seelog
 
 import (
-	"errors"
 	"fmt"
 	"golang.org/x/net/websocket"
 	"html/template"
@@ -12,10 +11,9 @@ import (
 
 // start http server
 func server(port int) {
-
 	defer func() {
 		if err := recover(); err != nil {
-			printError(errors.New("server panic"))
+			log.Printf("http server panic error: %v", err)
 		}
 	}()
 
@@ -24,7 +22,7 @@ func server(port int) {
 
 	// page
 	http.HandleFunc("/wstailog", func(writer http.ResponseWriter, request *http.Request) {
-		showPage(writer, webPageContent, slogs)
+		renderWebPage(writer, webPageContent, slogs)
 	})
 
 	err := http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
@@ -32,10 +30,11 @@ func server(port int) {
 }
 
 // response page
-func showPage(writer http.ResponseWriter, page string, data interface{}) {
+func renderWebPage(writer http.ResponseWriter, page string, data interface{}) {
 	t, err := template.New("").Parse(page)
 	if err != nil {
-		printError(err)
+		log.Printf("renderWebPage error: %v", err)
+		return
 	}
 	t.Execute(writer, data)
 }

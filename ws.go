@@ -2,9 +2,9 @@ package seelog
 
 import (
 	"encoding/json"
-	"errors"
 	"golang.org/x/net/websocket"
 	"io"
+	"log"
 )
 
 //  websocket客户端
@@ -33,7 +33,7 @@ var manager = clientManager{
 func (manager *clientManager) start() {
 	defer func() {
 		if err := recover(); err != nil {
-			printError(errors.New("manager start() panic"))
+			log.Printf("start manager panic error: %v", err)
 		}
 	}()
 
@@ -64,7 +64,7 @@ func (c *client) write() {
 		_, err := c.socket.Write(msgByte)
 		if err != nil {
 			manager.unregister <- c
-			printError(err)
+			log.Printf("write error: %v", err)
 			break
 		}
 	}
@@ -75,7 +75,7 @@ func (c *client) read() {
 		var reply string
 		if err := websocket.Message.Receive(c.socket, &reply); err != nil {
 			if err != io.EOF {
-				printError(err)
+				log.Printf("read error: %v", err)
 				manager.unregister <- c
 			}
 			break
@@ -86,7 +86,7 @@ func (c *client) read() {
 		var rcv = &recv{}
 		if err := json.Unmarshal([]byte(reply), &rcv); err != nil {
 			manager.unregister <- c
-			printError(err)
+			log.Printf("read error: %v", err)
 			break
 		}
 		c.see = rcv.LogName
