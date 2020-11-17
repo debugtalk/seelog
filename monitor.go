@@ -41,10 +41,10 @@ func monitor() {
 
 			t, err := tail.TailFile(sl.Path,
 				tail.Config{
-					Follow: true,
-					ReOpen: true,
+					Follow:   true,
+					ReOpen:   true,
 					Location: &tail.SeekInfo{Offset: fileInfo.Size(), Whence: 0},
-					Logger: tail.DiscardingLogger,
+					Logger:   tail.DiscardingLogger,
 				})
 
 			for line := range t.Lines {

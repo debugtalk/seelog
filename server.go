@@ -7,7 +7,6 @@ import (
 	"html/template"
 	"log"
 	"net/http"
-	"strings"
 	"time"
 )
 
@@ -24,14 +23,12 @@ func server(port int, password string) {
 	http.Handle("/ws", websocket.Handler(genConn))
 
 	// page
-	http.HandleFunc("/", func(writer http.ResponseWriter, request *http.Request) {
-		if !(strings.Replace(request.RequestURI, "/", "", -1) == password) {
-			showPage(writer, Page403, nil)
-			return
-		}
+	http.HandleFunc("/tailog", func(writer http.ResponseWriter, request *http.Request) {
 		showPage(writer, PageIndex, slogs)
 	})
-	log.Println(http.ListenAndServe(fmt.Sprintf(":%d", port), nil))
+
+	err := http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
+	log.Println(err)
 }
 
 // response page
