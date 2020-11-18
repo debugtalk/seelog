@@ -23,18 +23,18 @@ func (manager *wsClientManager) start() {
 
 	for {
 		select {
-		case conn := <-manager.register:
-			manager.clients[conn] = true
-		case conn := <-manager.unregister:
-			if _, ok := manager.clients[conn]; ok {
-				close(conn.send)
-				conn.socket.Close()
-				delete(manager.clients, conn)
+		case c := <-manager.register:
+			manager.clients[c] = true
+		case c := <-manager.unregister:
+			if _, ok := manager.clients[c]; ok {
+				close(c.send)
+				c.socket.Close()
+				delete(manager.clients, c)
 			}
 		case line := <-manager.broadcast:
-			for conn := range manager.clients {
-				if conn.logName == line.LogName {
-					conn.send <- line
+			for c := range manager.clients {
+				if c.logName == line.LogName {
+					c.send <- line
 				}
 			}
 		}

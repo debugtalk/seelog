@@ -30,13 +30,13 @@ func startServer(port int) {
 }
 
 // response page
-func renderWebPage(writer http.ResponseWriter, page string, data interface{}) {
+func renderWebPage(writer http.ResponseWriter, page string, slogs interface{}) {
 	t, err := template.New("").Parse(page)
 	if err != nil {
 		log.Printf("renderWebPage error: %v", err)
 		return
 	}
-	t.Execute(writer, data)
+	t.Execute(writer, slogs)
 }
 
 // create wsClient
