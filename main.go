@@ -46,12 +46,12 @@ func Serve(port int) {
 		return
 	}
 
+	// start to monitor all registered log files
+	go manager.monitorAllLogs(slogs)
+
+	// register HTTP handler, start listen and serve
+	go manager.listenAndServe(port)
+
 	// start websocket manager
 	go manager.start()
-
-	// start to monitor all registered log files
-	go monitorAllLogs(slogs)
-
-	// start log startServer
-	go startServer(port)
 }

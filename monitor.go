@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-func monitorLogFile(sl slog) {
+func (manager *wsClientManager) monitorLogFile(sl slog) {
 	defer func() {
 		if err := recover(); err != nil {
 			log.Printf("monitorLogFile panic error: %v", err)
@@ -45,9 +45,9 @@ func monitorLogFile(sl slog) {
 }
 
 // monitor all log files
-func monitorAllLogs(slogs []slog) {
+func (manager *wsClientManager) monitorAllLogs(slogs []slog) {
 	for _, sl := range slogs {
-		go monitorLogFile(sl)
+		go manager.monitorLogFile(sl)
 	}
 }
 

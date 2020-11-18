@@ -2,17 +2,13 @@ package wstailog
 
 import (
 	"encoding/json"
+	"fmt"
 	"golang.org/x/net/websocket"
 	"io"
 	"log"
+	"net/http"
+	"time"
 )
-
-type wsClientManager struct {
-	clients    map[*wsClient]bool
-	broadcast  chan logLine
-	register   chan *wsClient
-	unregister chan *wsClient
-}
 
 func (manager *wsClientManager) start() {
 	defer func() {
@@ -41,14 +37,27 @@ func (manager *wsClientManager) start() {
 	}
 }
 
-type wsClient struct {
-	id      string
-	socket  *websocket.Conn
-	send    chan logLine
-	logName string
+func (manager *wsClientManager) read(c *wsClient) {
+	for {
+		var reply string
+		if err := websocket.Message.Receive(c.socket, &reply); err != nil {
+			if err != io.EOF {
+				log.Printf("receive message error: %v", err)
+				manager.unregister <- c
+			}
+			break
+		}
+		var line = &logLine{}
+		if err := json.Unmarshal([]byte(reply), &line); err != nil {
+			manager.unregister <- c
+			log.Printf("parse received message error: %v", err)
+			break
+		}
+		c.logName = line.LogName
+	}
 }
 
-func (c *wsClient) write() {
+func (manager *wsClientManager) write(c *wsClient) {
 	for msg := range c.send {
 		msgByte, err := json.Marshal(msg)
 		if err != nil {
@@ -63,22 +72,30 @@ func (c *wsClient) write() {
 	}
 }
 
-func (c *wsClient) read() {
-	for {
-		var reply string
-		if err := websocket.Message.Receive(c.socket, &reply); err != nil {
-			if err != io.EOF {
-				log.Printf("read error: %v", err)
-				manager.unregister <- c
-			}
-			break
+// create wsClient
+func (manager *wsClientManager) createWSConnection(conn *websocket.Conn) {
+	client := &wsClient{time.Now().String(), conn, make(chan logLine, 1), slogs[0].Name}
+	manager.register <- client
+	go manager.read(client)
+	manager.write(client)
+}
+
+// start http server
+func (manager *wsClientManager) listenAndServe(port int) {
+	defer func() {
+		if err := recover(); err != nil {
+			log.Printf("http startServer panic error: %v", err)
 		}
-		var line = &logLine{}
-		if err := json.Unmarshal([]byte(reply), &line); err != nil {
-			manager.unregister <- c
-			log.Printf("read error: %v", err)
-			break
-		}
-		c.logName = line.LogName
-	}
+	}()
+
+	// socket
+	http.Handle("/ws", websocket.Handler(manager.createWSConnection))
+
+	// page
+	http.HandleFunc("/wstailog", func(writer http.ResponseWriter, request *http.Request) {
+		renderWebPage(writer, slogs)
+	})
+
+	err := http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
+	log.Println(err)
 }

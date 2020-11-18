@@ -1,5 +1,11 @@
 package wstailog
 
+import (
+	"html/template"
+	"log"
+	"net/http"
+)
+
 var webPageContent = `
 <!DOCTYPE html>
 <html>
@@ -131,3 +137,13 @@ var webPageContent = `
 </style>
 </html>
 `
+
+// response page
+func renderWebPage(writer http.ResponseWriter, slogs interface{}) {
+	t, err := template.New("").Parse(webPageContent)
+	if err != nil {
+		log.Printf("renderWebPage error: %v", err)
+		return
+	}
+	t.Execute(writer, slogs)
+}
