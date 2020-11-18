@@ -9,7 +9,6 @@ var webPageContent = `
     <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
     <script>
 
-        var out = true
         var filterText = ""
         var logName = ""
         var ws = null
@@ -21,7 +20,7 @@ var webPageContent = `
                 slog = eval('(' + e.data + ')');
 
                 // 过滤查询条件
-                if (out && (filterText == "" || slog.data.indexOf(filterText) != -1)){
+                if (filterText == "" || slog.data.indexOf(filterText) != -1){
                     $('#log').append("<pre style='color: white;font-size: 15px'>"+ slog.data +"</pre>").scrollTop($('#log')[0].scrollHeight)
                 }
             };
@@ -54,17 +53,6 @@ var webPageContent = `
                 ws.send(JSON.stringify({logName:logName}));
             })
 
-
-            //  暂停
-            $('#pause').click(function () {
-                out = !out
-                if (out){
-                    $(this).text('暂停').css("background-color","")
-                }else{
-                    $(this).text('已暂停').css("background-color","red")
-                }
-            })
-
             // 清屏
             $('#clear').click(function () {
                 $('#log').empty()
@@ -92,7 +80,6 @@ var webPageContent = `
             <option>{{ .Name }}</option>
         {{end}}
         </select>
-        <button id="pause">暂停</button>
         <button id="clear">清屏</button>
         <span style="padding:1px;border:1px ; background:#FFF"><button style="width: auto">过滤</button><input id="filter" type="text"></span>
 
