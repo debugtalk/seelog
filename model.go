@@ -3,8 +3,8 @@ package wstailog
 import "golang.org/x/net/websocket"
 
 type slog struct {
-	Name string `json:"name"`
-	Path string `json:"path"`
+	LogName string `json:"logName"`
+	LogPath string `json:"logPath"`
 }
 
 type logLine struct {

@@ -17,20 +17,20 @@ func init() {
 }
 
 // register monitor log file
-func Tail(name, path string) {
+func Tail(logName, logPath string) {
 
-	if name == "" || path == "" {
+	if logName == "" || logPath == "" {
 		log.Fatal("log name and path should not be empty")
 		return
 	}
 
 	for _, sl := range slogs {
-		if sl.Name == name {
-			log.Fatalf("log name has been registered: %s", name)
+		if sl.LogName == logName {
+			log.Fatalf("log name has been registered: %s", logName)
 			return
 		}
 	}
-	slogs = append(slogs, slog{name, path})
+	slogs = append(slogs, slog{logName, logPath})
 }
 
 // start monitor

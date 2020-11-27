@@ -83,7 +83,7 @@ var webPageContent = `
 
         <select id="logs">
         {{range .}}
-            <option>{{ .Name }}</option>
+            <option>{{ .LogName }}</option>
         {{end}}
         </select>
         <button id="clear">清屏</button>

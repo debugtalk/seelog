@@ -74,7 +74,7 @@ func (manager *wsClientManager) write(c *wsClient) {
 
 // create wsClient
 func (manager *wsClientManager) createWSConnection(conn *websocket.Conn) {
-	client := &wsClient{time.Now().String(), conn, make(chan logLine, 1), slogs[0].Name}
+	client := &wsClient{time.Now().String(), conn, make(chan logLine, 1), slogs[0].LogName}
 	manager.register <- client
 	go manager.read(client)
 	manager.write(client)

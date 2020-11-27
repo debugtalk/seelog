@@ -17,20 +17,20 @@ func (manager *wsClientManager) monitorLogFile(sl slog) {
 		}
 	}()
 
-	fileInfo, err := os.Stat(sl.Path)
+	fileInfo, err := os.Stat(sl.LogPath)
 	if err != nil {
-		log.Printf("wait log file to be created: %s", sl.Path)
-		fileInfo, err = blockUntilFileExists(sl.Path)
+		log.Printf("wait log file to be created: %s", sl.LogPath)
+		fileInfo, err = blockUntilFileExists(sl.LogPath)
 		if err != nil {
 			log.Fatalf(fmt.Sprintf("log file is not created, error: %v", err))
 			return
 		}
 	}
 
-	log.Printf("start to monitor log file: %s", sl.Path)
+	log.Printf("start to monitor log file: %s", sl.LogPath)
 
 	t, err := tail.TailFile(
-		sl.Path,
+		sl.LogPath,
 		tail.Config{
 			Follow:   true,
 			ReOpen:   true,
@@ -40,7 +40,7 @@ func (manager *wsClientManager) monitorLogFile(sl slog) {
 	)
 
 	for line := range t.Lines {
-		manager.broadcast <- logLine{sl.Name, line.Text}
+		manager.broadcast <- logLine{sl.LogName, line.Text}
 	}
 }
 
