@@ -23,11 +23,11 @@ var webPageContent = `
             ws = new WebSocket("ws://"+ window.location.host +"/ws");
             ws.onmessage = function(e) {
 
-                slog = eval('(' + e.data + ')');
+                slog = eval('(' + e.text + ')');
 
                 // 过滤查询条件
-                if (filterText == "" || slog.data.indexOf(filterText) != -1){
-                    $('#log').append("<pre style='color: white;font-size: 15px'>"+ slog.data +"</pre>").scrollTop($('#log')[0].scrollHeight)
+                if (filterText == "" || slog.text.indexOf(filterText) != -1){
+                    $('#log').append("<pre style='color: white;font-size: 15px'>"+ slog.text +"</pre>").scrollTop($('#log')[0].scrollHeight)
                 }
             };
             ws.onclose = function () {

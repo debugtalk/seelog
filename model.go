@@ -9,7 +9,7 @@ type slog struct {
 
 type logLine struct {
 	LogName string `json:"logName"`
-	Data    string `json:"data"`
+	Text    string `json:"text"`
 }
 
 type wsClient struct {
