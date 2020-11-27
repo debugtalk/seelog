@@ -23,7 +23,7 @@ var webPageContent = `
             ws = new WebSocket("ws://"+ window.location.host +"/ws");
             ws.onmessage = function(e) {
 
-                slog = eval('(' + e.text + ')');
+                slog = eval('(' + e.data + ')');
 
                 // 过滤查询条件
                 if (filterText == "" || slog.text.indexOf(filterText) != -1){
