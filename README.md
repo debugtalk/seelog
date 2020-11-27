@@ -16,8 +16,8 @@ Forked from `github.com/xmge/seelog`
 ```go
 import "github.com/debugtalk/wstailog"
 
-wstailog.See("错误日志", "err.log")   // 实时监听 err.log
-wstailog.See("调试日志", "debug.log") // 实时监听 debug.log
+wstailog.Tail("错误日志", "err.log")   // 实时监听 err.log
+wstailog.Tail("调试日志", "debug.log") // 实时监听 debug.log
 wstailog.Serve(27129)
 ```
 

@@ -17,7 +17,7 @@ func init() {
 }
 
 // register monitor log file
-func See(name, path string) {
+func Tail(name, path string) {
 
 	if name == "" || path == "" {
 		log.Fatal("log name and path should not be empty")
@@ -42,7 +42,7 @@ func Serve(port int) {
 	}
 
 	if len(slogs) < 1 {
-		log.Fatalf("no log file has been registered")
+		log.Fatalf("no log file registered")
 		return
 	}
 

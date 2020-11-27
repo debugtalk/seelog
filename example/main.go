@@ -14,10 +14,8 @@ const (
 )
 
 func main() {
-
-	// 测试
-	wstailog.See("错误日志", ErrLog)
-	wstailog.See("调试日志", DebugLog)
+	wstailog.Tail("错误日志", ErrLog)
+	wstailog.Tail("调试日志", DebugLog)
 	wstailog.Serve(27129)
 
 	// 模拟服务输出日志
